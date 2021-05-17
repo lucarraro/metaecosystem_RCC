@@ -7,8 +7,6 @@ if strcmp(type,'Area')
 elseif strcmp(type,'Elev')
     bins=[200 600:200:2400 3000];
     midpoints=[400 700:200:2300 2700];
-    %bins=[200:200:3000];
-    %midpoints=[300:200:2900];
     scale='linear';
 elseif strcmp(type,'Dist')
     bins=[0:1e4:1.5e5];

@@ -1,6 +1,4 @@
 function [Xfinal,flag_converge,maxreltol,Niter,maxabstol,Xmat] = linearized_mixed(parameters,OCNparam)
-%LINEARIZED_RSGC Summary of this function goes here
-%   Detailed explanation goes here
 
 [alphaR,alphaG,alphaS,alphaC,alphaF,alphaP,...
     betaR,betaG,betaS,betaC,betaF,betaP,...
@@ -28,7 +26,7 @@ ind_N=10:N_var:N_reach*N_var;  % NUTRIENTS
 X=1e-7*ones(N_reach*N_var,1);
 Xmat=ones(N_reach*N_var,1000);
 
-TransportMatrix=86400*W'.*repmat(Q',N_reach,1); % only upstream transport
+TransportMatrix=86400*W'.*repmat(Q',N_reach,1); 
 TransportMatrix=sparse(TransportMatrix);
 
 phiMC=kMC*aF.*Beff.*L./V;
@@ -56,7 +54,7 @@ MAT(ind_MD,ind_MD) = zeta*deltaMD./V.*TransportMatrix; % effect of upstream MD o
 MAT(ind_N,ind_N)   = zeta*deltaN./V.*TransportMatrix; % effect of upstream N on N
 
 iter=1; maxabstol=1e-3; maxreltol=1;
-while  iter <= N_maxIter && maxreltol > 1e-6 %abstol > 1e-10
+while  iter <= N_maxIter && maxreltol > 1e-6 
     Xold=X;
     Xmat(:,iter)=Xold;
     flag=ones(N_reach*N_var,1);
@@ -72,10 +70,6 @@ while  iter <= N_maxIter && maxreltol > 1e-6 %abstol > 1e-10
         X=xnew;
     end
     
-    %xnew(xnew<0)=0;
-    %xnew(xnew==Inf)=0; xnew(isnan(xnew))=0;
-    %X=xnew;
-    
     if iter > 1
         abstol=(abs(X-Xold));
         abstol(abstol==Inf)=0; abstol(abstol==-Inf)=0; abstol(isnan(abstol))=NaN;
@@ -85,12 +79,11 @@ while  iter <= N_maxIter && maxreltol > 1e-6 %abstol > 1e-10
         maxreltol=max(reltol);
     end
     iter=iter+1;
-    if mod(iter,100)==0 %&& iter > 2
+    if mod(iter,100)==0 
         pos_abs=find(abstol==max(abstol)); pos_abs=pos_abs(1);
         pos_rel=find(reltol==max(reltol)); pos_rel=pos_rel(1);
         disp(sprintf('Iter = %d  -  MaxAbstol = %.2e  at node %d  -  MaxReltol = %.2e at node %d',...
             iter,maxabstol,pos_abs,maxreltol,pos_rel))
-        %disp(sprintf('Iter = %d  -  MaxReltol = %.2e at node %d',iter,maxreltol,pos))
     end
 end
 if iter <= N_maxIter

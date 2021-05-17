@@ -1,6 +1,4 @@
 function [MAT,VEC] = eval_MAT_VEC(MAT,VEC,parameters,OCNparam,X,flag)
-%EVALMATVEC Summary of this function goes here
-%   Detailed explanation goes here
 
 [alphaR,alphaG,alphaS,alphaC,alphaF,alphaP,...
     betaR,betaG,betaS,betaC,betaF,betaP,...
