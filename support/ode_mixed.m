@@ -7,6 +7,8 @@ function [t,y] = ode_typeI(parameters,OCNparam,tspan,y0)
 MC0,MF0,MD0,N0,lambdaMC,lambdaMF,lambdaMD,lambdaN,zeta]=v2struct(parameters);
 [AS,B,L,Q,V,W]=v2struct(OCNparam);
 
+%L(L<1000)=0;
+%AS(AS<500000)=0;
 Wt = W';
 
 N_reach=length(L);
@@ -23,7 +25,7 @@ ind_MF=8:N_var:N_reach*N_var;  % FPOM
 ind_MD=9:N_var:N_reach*N_var;  % DOM
 ind_N=10:N_var:N_reach*N_var;  % NUTRIENTS
 
-[t,y]=ode23(@(t,y)eqs(t,y),tspan,y0,odeset('RelTol',1e-6,'AbsTol',1e-12));  
+[t,y]=ode23(@(t,y)eqs(t,y),tspan,y0,odeset('RelTol',1e-6,'AbsTol',1e-12));  %'NonNegative',1:(N_reach*N_var),  ) ,odeset('NonNegative',1:(N_reach*6) 
 
 function dy=eqs(t,y)
     

@@ -3,9 +3,15 @@ function [t,y] = ode_typeI(parameters,OCNparam,tspan,y0)
 [alphaR,alphaG,alphaS,alphaC,alphaF,alphaP,...
     betaR,betaG,betaS,betaC,betaF,betaP,...
     muR,muG,muS,muC,muF,muP,epsilonR,epsilonG,epsilonS,epsilonC,epsilonF,epsilonP,...
-    deltaMC,deltaMF,deltaMD,deltaN,aF,aN,Beff,kMC,kMD,kN,light,...
-MC0,MF0,MD0,N0,lambdaMC,lambdaMF,lambdaMD,lambdaN,zeta]=v2struct(parameters);
-[AS,B,L,Q,V,W]=v2struct(OCNparam);
+    deltaMC,deltaMF,deltaMD,deltaN,aF,aN,kMD,kN,...
+    MC0,MF0,MD0,N0,lambdaMC,lambdaMF,lambdaMD,lambdaN,zeta,Kd,Bbar]=v2struct(parameters);
+
+[AS,B,L,Q,V,W,downNode,A,z]=v2struct(OCNparam);
+
+% recalculate
+Beff = min(B,Bbar);
+kMC = 1000/sum(aF.*Beff.*L); % m^-2 day^-1ind_S
+light = (1 - exp(-Kd*z))./(Kd*z).*(1-exp(-1./aF.*B/Bbar)); 
 
 Wt = W';
 
@@ -23,7 +29,7 @@ ind_MF=8:N_var:N_reach*N_var;  % FPOM
 ind_MD=9:N_var:N_reach*N_var;  % DOM
 ind_N=10:N_var:N_reach*N_var;  % NUTRIENTS
 
-[t,y]=ode23(@(t,y)eqs(t,y),tspan,y0,odeset('RelTol',1e-6,'AbsTol',1e-12));  
+[t,y]=ode23(@(t,y)eqs(t,y),tspan,y0,odeset('RelTol',1e-6,'AbsTol',1e-12));  %'NonNegative',1:(N_reach*N_var),  ) ,odeset('NonNegative',1:(N_reach*6) 
 
 function dy=eqs(t,y)
     
