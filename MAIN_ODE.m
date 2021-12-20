@@ -170,7 +170,7 @@ OCNparam_net.Q=Q_net; OCNparam_lin2.V=V_net; OCNparam_net.W=W_net; OCNparam_net.
             y_net=[y_net; y_tmp(2:end,:)];
             y0=y_tmp(end,:);
             flagsave=1;
-            try save('results/y_net.mat','y_linC','X_linC')
+            try save('results/y_net.mat','y_net','X_net')
             catch
                 flagsave=0;
             end
